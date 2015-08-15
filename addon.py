@@ -18,6 +18,8 @@ xbmcplugin.setContent(addon_handle, 'movies')
 
 args = urlparse.parse_qs(sys.argv[2][1:])	# The query string passed to your add-on, e.g. '?foo=bar&baz=quux'
 
+pcloud=resources.lib.pcloudapi
+
 def build_url(query):
     return base_url + '?' + urllib.urlencode(query)
 	
@@ -25,6 +27,36 @@ mode = args.get('mode', None)
 
 # Mode is None when the plugin gets first invoked - Kodi does not pass a query string to our plugin's base URL
 if mode is None:
+	folderID = 0 # ID of PCloud's root folder
+elif mode[0] == 'folder':
+	folderID = int(args['folderID'][0])
+
+auth = None # in the future this will be read from the settings
+# Now call PCloud to list folder contents
+if auth is None: 
+	auth = pcloud.PerformLogon("guido.domenici@gmail.com", "qei835GD") # and so will the credentials
+	#xbmc.executebuiltin('XBMC.Notification("%s", "%s")' %("Success", auth))
+
+folderContents = pcloud.ListFolderContents(folderID)
+#xbmc.executebuiltin('XBMC.Notification("%s", "%s")' %("Success", folderContents))
+for oneItem in folderContents["metadata"]["contents"]:
+	if oneItem["isfolder"] == True:
+		#url = build_url({'mode': 'folder', 'folderID': 'Folder One'})
+		url = base_url + "?mode=folder&folderID=" + `oneItem["folderid"]`
+		li = xbmcgui.ListItem(oneItem["name"], iconImage='DefaultFolder.png')
+		xbmcplugin.addDirectoryItem(handle=addon_handle, url=url,
+								listitem=li, isFolder=True)
+	else:
+		li = xbmcgui.ListItem(oneItem["name"], iconImage='DefaultVideo.png')
+		fakeUrl = "http://192.168.1.250/video.mp4" # TODO: call PCloud's streaming API to get real URL
+		xbmcplugin.addDirectoryItem(handle=addon_handle, url=fakeUrl, listitem=li)
+		
+xbmcplugin.endOfDirectory(addon_handle)
+
+	
+exit()
+	
+if mode is None:	
 	# creates a URL like plugin://plugin.video.pcloud-video-streaming/?mode=folder&foldername=Folder+One
 	url = build_url({'mode': 'folder', 'foldername': 'Folder One'})
 	li = xbmcgui.ListItem('Folder One', iconImage='DefaultFolder.png')
