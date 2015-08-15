@@ -1,3 +1,5 @@
+import resources.lib.pcloudapi
+
 import sys
 import urllib
 import urlparse
