@@ -61,12 +61,11 @@ def PerformLogon(username, password):
 	outputStream.close()
 	if response["result"] != 0:
 		errorMessage = GetErrorMessage(response["result"])
-		print 'Error calling userinfo: ' + errorMessage
-		exit()
+		raise Exception("Error calling userinfo: " + errorMessage)
 	auth = response["auth"]
 	return auth
 
-def ListFolderContents(folderNameOrID):
+def ListFolderContents(folderNameOrID, auth):
 	url = PCLOUD_BASE_URL + "listfolder?auth=" + auth
 	if isinstance (folderNameOrID, Number):
 		url += "&folderid=" + `folderNameOrID` # string coercion
@@ -77,16 +76,24 @@ def ListFolderContents(folderNameOrID):
 	outputStream.close()
 	if response["result"] != 0:
 		errorMessage = GetErrorMessage(response["result"])
-		print 'Error calling listfolder: ' + errorMessage
-		exit()
+		raise Exception("Error calling listfolder: " + errorMessage)
 	return response
 
+def GetStreamingUrl(fileID, auth):
+	url = PCLOUD_BASE_URL + "getfilelink?auth=" + auth + "&fileid=" + `fileID`
+	outputStream = urllib2.urlopen(url)
+	response = json.load(outputStream)
+	outputStream.close()
+	if response["result"] != 0:
+		errorMessage = GetErrorMessage(response["result"])
+		raise Exception("Error calling getfilelink: " + errorMessage)
+	streamingUrl = "https://%s%s" % (response["hosts"][0], response["path"])
+	return streamingUrl
 	
-	
-auth = PerformLogon("guido.domenici@gmail.com", "qei835GD")
+#auth = PerformLogon("guido.domenici@gmail.com", "qei835GD")
 #ListFolderContents("/Vcast")
 #ListFolderContents(34719254)
 #ListFolderContents(4684587) # random number, probably invalid
-folderContents = ListFolderContents("/Vcast")
-for oneItem in folderContents["metadata"]["contents"]:
-	print oneItem["name"]
+#folderContents = ListFolderContents("/Vcast")
+#for oneItem in folderContents["metadata"]["contents"]:
+#	print oneItem["name"]

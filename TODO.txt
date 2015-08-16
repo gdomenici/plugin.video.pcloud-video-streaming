@@ -1,6 +1,10 @@
-- Get real URL from PCloud's streaming API
+TODO
 - Add real thumbnails to files and (maybe) to folders
 	- What about fanart?
 - Add settings dialog for username & password
 - Persist auth
 - Persist "last used folder ID"
+
+
+DONE
+- Get real URL from PCloud's streaming API
