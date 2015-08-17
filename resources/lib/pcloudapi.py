@@ -2,8 +2,12 @@ import urllib2
 import json
 import hashlib
 from numbers import Number # to check whether a certain variable is numeric
+import xbmcaddon
 
 PCLOUD_BASE_URL = 'https://api.pcloud.com/'
+TOKEN_EXPIRATION_SECONDS = 100 * 86400 # 100 days
+
+myAddon = xbmcaddon.Addon()
 
 def GetErrorMessage(errorCode):
 	if errorCode == 1000:
@@ -46,7 +50,6 @@ def PerformLogon(username, password):
 		print 'Error calling getdigest: ' + errorMessage
 		exit()
 	
-	TOKEN_EXPIRATION_SECONDS = 14 * 86400 # 14 days
 	authUrl = PCLOUD_BASE_URL + "userinfo?getauth=1&logout=1&username=" + username + "&digest=" + response["digest"] + \
 				"&authexpire=" + `TOKEN_EXPIRATION_SECONDS` # this backtick affair is a to-string conversion
 	sha1 = hashlib.sha1()
@@ -65,7 +68,8 @@ def PerformLogon(username, password):
 	auth = response["auth"]
 	return auth
 
-def ListFolderContents(folderNameOrID, auth):
+def ListFolderContents(folderNameOrID):
+	auth = myAddon.getSetting("auth")
 	url = PCLOUD_BASE_URL + "listfolder?auth=" + auth
 	if isinstance (folderNameOrID, Number):
 		url += "&folderid=" + `folderNameOrID` # string coercion
@@ -79,7 +83,8 @@ def ListFolderContents(folderNameOrID, auth):
 		raise Exception("Error calling listfolder: " + errorMessage)
 	return response
 
-def GetStreamingUrl(fileID, auth):
+def GetStreamingUrl(fileID):
+	auth = myAddon.getSetting("auth")
 	url = PCLOUD_BASE_URL + "getfilelink?auth=" + auth + "&fileid=" + `fileID`
 	outputStream = urllib2.urlopen(url)
 	response = json.load(outputStream)
@@ -90,7 +95,7 @@ def GetStreamingUrl(fileID, auth):
 	streamingUrl = "https://%s%s" % (response["hosts"][0], response["path"])
 	return streamingUrl
 	
-#auth = PerformLogon("guido.domenici@gmail.com", "qei835GD")
+#auth = PerformLogon("username@example.com", "password")
 #ListFolderContents("/Vcast")
 #ListFolderContents(34719254)
 #ListFolderContents(4684587) # random number, probably invalid

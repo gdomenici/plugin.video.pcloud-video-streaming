@@ -6,6 +6,8 @@ import urlparse
 import xbmcplugin
 import xbmcgui
 import xbmcaddon
+from datetime import datetime, timedelta
+import time
 
 myAddon = xbmcaddon.Addon()
 #customSettingsPath = xbmc.translatePath( __addon__.getAddonInfo("profile") ).decode("utf-8")
@@ -19,44 +21,53 @@ args = urlparse.parse_qs(sys.argv[2][1:])	# The query string passed to your add-
 
 pcloud=resources.lib.pcloudapi
 
-def build_url(query):
-    return base_url + '?' + urllib.urlencode(query)
-
-'''	
-auth = myAddon.getSetting("auth")
-
-if auth == "":
-	myAddon.openSettings()
-	#xbmcgui.Dialog().notification("Info", auth, time=10000)
-	username = myAddon.getSetting("username")
-	xbmcgui.Dialog().notification("Info", username, time=10000)
+#DATE_EXPORT_FORMAT = "%Y-%m-%d %H:%M:%S"
 '''
-	
-authList = args.get("auth", None)
-if authList is None:
-	auth = pcloud.PerformLogon("guido.domenici@gmail.com", "qei835GD") # and so will the credentials
-else:
-	auth = authList[0]
+class MyXbmcMonitor( xbmc.Monitor ):
+    def __init__( self, *args, **kwargs ):
+		xbmc.Monitor.__init__(self)
+    
+    def onSettingsChanged( self ):
+        xbmcgui.Dialog().notification("Info", "Settings changed", time=10000)		
+'''
+def IsAuthMissing():
+	auth = myAddon.getSetting("auth")
+	authExpiryStr = myAddon.getSetting("authExpiry")
+	if authExpiryStr is None or authExpiryStr == "":
+		return True
+	authExpiryTimestamp = float(authExpiryStr)
+	authExpiry = datetime.fromtimestamp(authExpiryTimestamp)
+	if datetime.now() > authExpiry:
+		return True
+	return (auth == "")
 
-mode = args.get("mode", None)
+def ShowSettingsListItem():
+	li = xbmcgui.ListItem("Log on to PCloud...")
+	settingsUrl = base_url + "?mode=showSettings"
+	xbmcplugin.addDirectoryItem(handle=addon_handle, url=settingsUrl, listitem=li)
+	xbmcplugin.endOfDirectory(addon_handle)
+
+folderID = None
 
 # Mode is None when the plugin gets first invoked - Kodi does not pass a query string to our plugin's base URL
+mode = args.get("mode", None)
 if mode is None:
-	folderID = None
 	mode = [ "folder" ]
-
+	
 if mode[0] == "folder":
+	if IsAuthMissing():
+		ShowSettingsListItem()
+		exit()
 	folderID = args.get("folderID", None)
 	if folderID is None:
 		folderID = 0
 	else:
 		folderID = int(folderID[0])
 	
-	folderContents = pcloud.ListFolderContents(folderID, auth)
+	folderContents = pcloud.ListFolderContents(folderID)
 	for oneItem in folderContents["metadata"]["contents"]:
 		if oneItem["isfolder"] == True:
-			#url = build_url({'mode': 'folder', 'folderID': 'Folder One'})
-			url = base_url + "?mode=folder&folderID=" + `oneItem["folderid"]` + "&auth=" + auth
+			url = base_url + "?mode=folder&folderID=" + `oneItem["folderid"]`
 			li = xbmcgui.ListItem(oneItem["name"], iconImage='DefaultFolder.png')
 			xbmcplugin.addDirectoryItem(handle=addon_handle, url=url,
 									listitem=li, isFolder=True)
@@ -78,15 +89,34 @@ if mode[0] == "folder":
 				"audio",
 				{ 	"codec", oneItem["audiocodec"] }
 			)
-			fileUrl = base_url + "?mode=file&fileID=" + `oneItem["fileid"]` + "&auth=" + auth
+			fileUrl = base_url + "?mode=file&fileID=" + `oneItem["fileid"]`
 			xbmcplugin.addDirectoryItem(handle=addon_handle, url=fileUrl, listitem=li)
 			
 	xbmcplugin.endOfDirectory(addon_handle)
 	
 elif mode[0] == "file":
+	if IsAuthMissing():
+		ShowSettingsListItem()
+		exit()
 	fileID = int(args["fileID"][0])
 	auth = args["auth"][0]
 	# Get streaming URL from pcloud
 	streamingUrl = pcloud.GetStreamingUrl(fileID, auth)
 	player = xbmc.Player()
 	player.play(streamingUrl)
+
+elif mode[0] == "showSettings":
+	previousUsername = myAddon.getSetting("username")
+	previousPassword = myAddon.getSetting("password")
+	myAddon.openSettings()
+	newUsername = myAddon.getSetting("username")
+	newPassword = myAddon.getSetting("password")
+	if newUsername != previousUsername or newPassword != previousPassword:
+		auth = pcloud.PerformLogon(newUsername, newPassword)
+		myAddon.setSetting("auth", auth)
+		authExpiry = datetime.now() + timedelta(seconds = pcloud.TOKEN_EXPIRATION_SECONDS)
+		authExpiryTimestamp = time.mktime(authExpiry.timetuple())
+		myAddon.setSetting("authExpiry", `authExpiryTimestamp`)
+		#folderUrl = base_url + "?mode=folder"
+		#xbmc.executebuiltin("RunPlugin('%s')" % (folderUrl))
+		xbmcgui.Dialog().ok("Success", "Logon successful", "Please hit Back and then click again on this plugin.")
