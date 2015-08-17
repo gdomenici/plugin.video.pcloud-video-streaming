@@ -10,7 +10,7 @@
   </extension>
   <extension point="xbmc.addon.metadata">
     <summary lang="en">Provides streaming from a pcloud.com bucket</summary>
-    <description lang="en">Provides streaming from a pcloud.com video source. You need an account with PCloud to use this (free account OK). Not affiliated with pcloud.com in any way.</description>
+    <description lang="en">Provides streaming from a pcloud.com video source. You need an account with PCloud to use this (free accounts are OK). Not affiliated with pcloud.com.</description>
     <disclaimer lang="en"></disclaimer>
     <language>en</language>
     <platform>all</platform>

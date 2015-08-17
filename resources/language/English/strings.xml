@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <strings>
-  <string id="30100">Some string 1</string>
-  <string id="30101">Some string 2</string>
+  <string id="30100">General</string>
+  <string id="30101">PCloud username</string>
   <string id="30102">Some string 3</string>
   <string id="30103">Some string 4</string>
   <string id="30104">Some string 5</string>
-  <string id="30105">Some string 6</string>
+  <string id="30105">PCloud auth</string>
+  <string id="30106">Custom action</string>
+  <string id="30107">Do something</string>
 </strings>

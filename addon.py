@@ -5,6 +5,11 @@ import urllib
 import urlparse
 import xbmcplugin
 import xbmcgui
+import xbmcaddon
+
+myAddon = xbmcaddon.Addon()
+#customSettingsPath = xbmc.translatePath( __addon__.getAddonInfo("profile") ).decode("utf-8")
+#customSettingsFilename = customSettingsPath + "customSettings.xml"
 
 base_url = sys.argv[0] 						# The base URL of your add-on, e.g. 'plugin://plugin.video.pcloud-video-streaming/'
 addon_handle = int(sys.argv[1])				# The process handle for this add-on, as a numeric string
@@ -16,14 +21,22 @@ pcloud=resources.lib.pcloudapi
 
 def build_url(query):
     return base_url + '?' + urllib.urlencode(query)
-		
+
+'''	
+auth = myAddon.getSetting("auth")
+
+if auth == "":
+	myAddon.openSettings()
+	#xbmcgui.Dialog().notification("Info", auth, time=10000)
+	username = myAddon.getSetting("username")
+	xbmcgui.Dialog().notification("Info", username, time=10000)
+'''
+	
 authList = args.get("auth", None)
 if authList is None:
 	auth = pcloud.PerformLogon("guido.domenici@gmail.com", "qei835GD") # and so will the credentials
-	#xbmc.executebuiltin('XBMC.Notification("%s", "%s")' %("Success", auth))
 else:
 	auth = authList[0]
-	#xbmc.executebuiltin('XBMC.Notification("%s", "auth is: %s")' %("Success", auth))
 
 mode = args.get("mode", None)
 
