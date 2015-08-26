@@ -47,8 +47,7 @@ def PerformLogon(username, password):
 	outputStream.close()
 	if response["result"] != 0:
 		errorMessage = GetErrorMessage(response["result"])
-		print 'Error calling getdigest: ' + errorMessage
-		exit()
+		raise Exception("Error calling getdigest: " + errorMessage)
 	
 	authUrl = PCLOUD_BASE_URL + "userinfo?getauth=1&logout=1&username=" + username + "&digest=" + response["digest"] + \
 				"&authexpire=" + `TOKEN_EXPIRATION_SECONDS` # this backtick affair is a to-string conversion

@@ -41,12 +41,39 @@ def IsAuthMissing():
 		return True
 	return (auth == "")
 
-def ShowSettingsListItem():
-	li = xbmcgui.ListItem("Log on to PCloud...")
-	settingsUrl = base_url + "?mode=showSettings"
-	xbmcplugin.addDirectoryItem(handle=addon_handle, url=settingsUrl, listitem=li)
-	xbmcplugin.endOfDirectory(addon_handle)
-
+def AuthenticateToPCloud():
+	yesNoDialog = xbmcgui.Dialog()
+	wantToAuthenticate = yesNoDialog.yesno(
+							"Log On",
+							"Log on to PCloud?")
+	if not wantToAuthenticate:
+		return False
+	usernameDialog = xbmcgui.Dialog()
+	username = usernameDialog.input("PCloud username (email)")
+	if username == "":
+		return False
+	passwordDialog = xbmcgui.Dialog()
+	password = passwordDialog.input(
+									"PCloud password",
+									option=xbmcgui.ALPHANUM_HIDE_INPUT)
+	if password == "":
+		return False
+	try:
+		auth = pcloud.PerformLogon(username, password)
+	except Exception as ex:
+		xbmcgui.Dialog().notification(
+			"Error", "Cannot log on to PCloud (see log)",
+			icon=xbmcgui.NOTIFICATION_ERROR,
+			time=5000)
+		xbmc.log("ERROR: cannot logon to PCloud: " + `ex`, xbmc.LOGERROR)
+		return False
+	myAddon.setSetting("auth", auth)
+	authExpiry = datetime.now() + timedelta(seconds = pcloud.TOKEN_EXPIRATION_SECONDS)
+	authExpiryTimestamp = time.mktime(authExpiry.timetuple())
+	myAddon.setSetting("authExpiry", `authExpiryTimestamp`)
+	xbmcgui.Dialog().notification("Success", "Logon successful", time=5000)
+	return True
+	
 folderID = None
 
 # Mode is None when the plugin gets first invoked - Kodi does not pass a query string to our plugin's base URL
@@ -56,8 +83,9 @@ if mode is None:
 	
 if mode[0] == "folder":
 	if IsAuthMissing():
-		ShowSettingsListItem()
-		exit()
+		authResult = AuthenticateToPCloud()
+		if authResult == False:
+			exit()
 	folderID = args.get("folderID", None)
 	if folderID is None:
 		folderID = 0
@@ -96,15 +124,15 @@ if mode[0] == "folder":
 	
 elif mode[0] == "file":
 	if IsAuthMissing():
-		ShowSettingsListItem()
-		exit()
+		authResult = AuthenticateToPCloud()
+		if authResult == False:
+			exit()
 	fileID = int(args["fileID"][0])
-	auth = args["auth"][0]
 	# Get streaming URL from pcloud
-	streamingUrl = pcloud.GetStreamingUrl(fileID, auth)
+	streamingUrl = pcloud.GetStreamingUrl(fileID)
 	player = xbmc.Player()
 	player.play(streamingUrl)
-
+'''
 elif mode[0] == "showSettings":
 	previousUsername = myAddon.getSetting("username")
 	previousPassword = myAddon.getSetting("password")
@@ -120,3 +148,4 @@ elif mode[0] == "showSettings":
 		#folderUrl = base_url + "?mode=folder"
 		#xbmc.executebuiltin("RunPlugin('%s')" % (folderUrl))
 		xbmcgui.Dialog().ok("Success", "Logon successful", "Please hit Back and then click again on this plugin.")
+'''
