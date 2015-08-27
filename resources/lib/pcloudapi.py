@@ -93,6 +93,12 @@ def GetStreamingUrl(fileID):
 		raise Exception("Error calling getfilelink: " + errorMessage)
 	streamingUrl = "https://%s%s" % (response["hosts"][0], response["path"])
 	return streamingUrl
+
+def GetThumbnails (fileIDSequence):
+	commaSeparated = ",".join(fileIDSequence)
+	auth = myAddon.getSetting("auth")
+	url = PCLOUD_BASE_URL + "getthumbslinks?auth=" + auth + "&fileids=" + commaSeparated
+
 	
 #auth = PerformLogon("username@example.com", "password")
 #ListFolderContents("/Vcast")
