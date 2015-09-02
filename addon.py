@@ -19,7 +19,8 @@ xbmcplugin.setContent(addon_handle, 'movies')
 
 args = urlparse.parse_qs(sys.argv[2][1:])	# The query string passed to your add-on, e.g. '?foo=bar&baz=quux'
 
-pcloud=resources.lib.pcloudapi
+# Instance of PCloudApi
+pcloud = resources.lib.pcloudapi.PCloudApi()
 
 #DATE_EXPORT_FORMAT = "%Y-%m-%d %H:%M:%S"
 '''
@@ -37,9 +38,11 @@ def IsAuthMissing():
 		return True
 	authExpiryTimestamp = float(authExpiryStr)
 	authExpiry = datetime.fromtimestamp(authExpiryTimestamp)
-	if datetime.now() > authExpiry:
+	if datetime.now() > authExpiry or auth == "":
 		return True
-	return (auth == "")
+	# If we're here it means there is valid auth saved in the config file
+	pcloud.SetAuth(auth)
+	return False
 
 def AuthenticateToPCloud():
 	yesNoDialog = xbmcgui.Dialog()
@@ -104,7 +107,6 @@ if mode[0] == "folder":
 			if contentType != "video/mp4": #TODO: add more content types
 				continue
 			li = xbmcgui.ListItem(oneItem["name"], iconImage='DefaultVideo.png')
-			#fakeUrl = "http://192.168.1.250/video.mp4" # TODO: call PCloud's streaming API to get real URL
 			li.addStreamInfo(
 				"video", 
 				{ 	"duration": int(float(oneItem["duration"])),
