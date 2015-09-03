@@ -108,15 +108,15 @@ class PCloudApi:
 
 	def GetThumbnails (self, fileIDSequence):
 		self.CheckIfAuthPresent()
-		commaSeparated = ",".join(fileIDSequence)
-		url = self.PCLOUD_BASE_URL + "getthumbslinks?auth=" + self.auth + "&fileids=" + commaSeparated + "&size=" + SOMETHING
+		commaSeparated = ",".join(`oneFileID` for oneFileID in fileIDSequence) # coerce to string before comma-joining
+		url = self.PCLOUD_BASE_URL + "getthumbslinks?auth=" + self.auth + "&fileids=" + commaSeparated + "&size=256x256&format=png"
 		outputStream = urllib2.urlopen(url)
 		response = json.load(outputStream)
 		outputStream.close()
 		if response["result"] != 0:
 			errorMessage = self.GetErrorMessage(response["result"])
 			raise Exception("Error calling getthumbslinks: " + errorMessage)
-	
+		return response
 	
 #auth = PerformLogon("username@example.com", "password")
 #ListFolderContents("/Vcast")
