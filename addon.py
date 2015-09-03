@@ -96,6 +96,10 @@ if mode[0] == "folder":
 		folderID = int(folderID[0])
 	
 	folderContents = pcloud.ListFolderContents(folderID)
+	# Collect all file IDs in order to get thhumbnails
+	allFileIDs = [ oneItem["fileid"] for oneItem in folderContents["metadata"]["contents"] if not oneItem["isfolder"] ]
+	thumbs = pcloud.GetThumbnails(allFileIDs)
+	# Then iterate through all the files in order to populate the GUI
 	for oneItem in folderContents["metadata"]["contents"]:
 		if oneItem["isfolder"] == True:
 			url = base_url + "?mode=folder&folderID=" + `oneItem["folderid"]`
@@ -106,7 +110,10 @@ if mode[0] == "folder":
 			contentType = oneItem["contenttype"]
 			if contentType != "video/mp4": #TODO: add more content types
 				continue
-			li = xbmcgui.ListItem(oneItem["name"], iconImage='DefaultVideo.png')
+			thumbnailUrl = thumbs.get(oneItem["fileid"], None)
+			if thumbnailUrl is None:
+				thumbnailUrl = "DefaultVideo.png"
+			li = xbmcgui.ListItem(oneItem["name"], iconImage=thumbnailUrl)
 			li.addStreamInfo(
 				"video", 
 				{ 	"duration": int(float(oneItem["duration"])),
@@ -134,20 +141,3 @@ elif mode[0] == "file":
 	streamingUrl = pcloud.GetStreamingUrl(fileID)
 	player = xbmc.Player()
 	player.play(streamingUrl)
-'''
-elif mode[0] == "showSettings":
-	previousUsername = myAddon.getSetting("username")
-	previousPassword = myAddon.getSetting("password")
-	myAddon.openSettings()
-	newUsername = myAddon.getSetting("username")
-	newPassword = myAddon.getSetting("password")
-	if newUsername != previousUsername or newPassword != previousPassword:
-		auth = pcloud.PerformLogon(newUsername, newPassword)
-		myAddon.setSetting("auth", auth)
-		authExpiry = datetime.now() + timedelta(seconds = pcloud.TOKEN_EXPIRATION_SECONDS)
-		authExpiryTimestamp = time.mktime(authExpiry.timetuple())
-		myAddon.setSetting("authExpiry", `authExpiryTimestamp`)
-		#folderUrl = base_url + "?mode=folder"
-		#xbmc.executebuiltin("RunPlugin('%s')" % (folderUrl))
-		xbmcgui.Dialog().ok("Success", "Logon successful", "Please hit Back and then click again on this plugin.")
-'''

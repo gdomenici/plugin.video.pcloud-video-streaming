@@ -1,7 +1,6 @@
 TODO
-- Add real thumbnails to files and (maybe) to folders
-	- What about fanart?
 - Persist "last used folder ID"
+- What about fanart?
 
 DONE
 - Get real URL from PCloud's streaming API
@@ -10,3 +9,4 @@ DONE
 - See what happens if one opens the settings page directly from the Kodi plugin page (maybe need to handle the notif?)
 	- For example test with bad username or password
 - Figure out a way to reload the main page once settings have been set for the first time
+- Add real thumbnails to files and (maybe) to folders
