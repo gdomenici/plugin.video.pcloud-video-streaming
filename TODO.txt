@@ -1,6 +1,8 @@
 TODO
 - Persist "last used folder ID"
 - What about fanart?
+- From http://kodi.wiki/view/Add-on_rules:
+	- all strings used by add-ons must be localized, no hard-coded language strings should ever be used
 
 DONE
 - Get real URL from PCloud's streaming API
