@@ -9,8 +9,6 @@ from datetime import datetime, timedelta
 import time
 
 myAddon = xbmcaddon.Addon()
-#customSettingsPath = xbmc.translatePath( __addon__.getAddonInfo("profile") ).decode("utf-8")
-#customSettingsFilename = customSettingsPath + "customSettings.xml"
 
 base_url = sys.argv[0] 						# The base URL of your add-on, e.g. 'plugin://plugin.video.pcloud-video-streaming/'
 addon_handle = int(sys.argv[1])				# The process handle for this add-on, as a numeric string
@@ -21,7 +19,6 @@ args = urlparse.parse_qs(sys.argv[2][1:])	# The query string passed to your add-
 # Instance of PCloudApi
 pcloud = resources.lib.pcloudapi.PCloudApi()
 
-#DATE_EXPORT_FORMAT = "%Y-%m-%d %H:%M:%S"
 '''
 class MyXbmcMonitor( xbmc.Monitor ):
     def __init__( self, *args, **kwargs ):

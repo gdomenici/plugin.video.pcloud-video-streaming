@@ -2,14 +2,7 @@ TODO
 - Persist "last used folder ID"
 - What about fanart?
 - From http://kodi.wiki/view/Add-on_rules:
-	- all strings used by add-ons must be localized, no hard-coded language strings should ever be used
+	- all strings used by add-ons must be localized, no hard-coded language strings should ever be used (use xbmc.getLocalizedString(1234))
 
 DONE
-- Get real URL from PCloud's streaming API
-- Add settings dialog for username & password
-- Persist auth
-- See what happens if one opens the settings page directly from the Kodi plugin page (maybe need to handle the notif?)
-	- For example test with bad username or password
-- Figure out a way to reload the main page once settings have been set for the first time
-- Add real thumbnails to files and (maybe) to folders
-
+- See changelog.txt
