@@ -43,17 +43,17 @@ def IsAuthMissing():
 def AuthenticateToPCloud():
 	yesNoDialog = xbmcgui.Dialog()
 	wantToAuthenticate = yesNoDialog.yesno(
-							"Log On",
-							"Log on to PCloud?")
+							myAddon.getLocalizedString(30103), # Log On
+							myAddon.getLocalizedString(30104)) # Log on to PCloud?
 	if not wantToAuthenticate:
 		return False
 	usernameDialog = xbmcgui.Dialog()
-	username = usernameDialog.input("PCloud username (email)")
+	username = usernameDialog.input(myAddon.getLocalizedString(30101)) # PCloud username (email)
 	if username == "":
 		return False
 	passwordDialog = xbmcgui.Dialog()
 	password = passwordDialog.input(
-									"PCloud password",
+									myAddon.getLocalizedString(30102), # PCloud password
 									option=xbmcgui.ALPHANUM_HIDE_INPUT)
 	if password == "":
 		return False
@@ -61,16 +61,20 @@ def AuthenticateToPCloud():
 		auth = pcloud.PerformLogon(username, password)
 	except Exception as ex:
 		xbmcgui.Dialog().notification(
-			"Error", "Cannot log on to PCloud (see log)",
+			myAddon.getLocalizedString(30107), # Error
+			myAddon.getLocalizedString(30108), # Cannot log on to PCloud (see log)
 			icon=xbmcgui.NOTIFICATION_ERROR,
 			time=5000)
-		xbmc.log("ERROR: cannot logon to PCloud: " + `ex`, xbmc.LOGERROR)
+		xbmc.log(myAddon.getLocalizedString(30109) + ": " + `ex`, xbmc.LOGERROR) # ERROR: cannot logon to PCloud
 		return False
 	myAddon.setSetting("auth", auth)
 	authExpiry = datetime.now() + timedelta(seconds = pcloud.TOKEN_EXPIRATION_SECONDS)
 	authExpiryTimestamp = time.mktime(authExpiry.timetuple())
 	myAddon.setSetting("authExpiry", `authExpiryTimestamp`)
-	xbmcgui.Dialog().notification("Success", "Logon successful", time=5000)
+	xbmcgui.Dialog().notification(
+			myAddon.getLocalizedString(30110), # Success
+			myAddon.getLocalizedString(30111), # Logon successful
+			time=5000)
 	return True
 	
 folderID = None
