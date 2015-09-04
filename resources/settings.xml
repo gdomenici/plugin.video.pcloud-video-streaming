@@ -7,5 +7,5 @@
     </category>
     <!-- category label="30106">
         <setting label="30107" type="action" action="RunScript(plugin.video.pcloud-video-streaming, downloadreport)"/>
-    </category-->
+    </category -->
 </settings>

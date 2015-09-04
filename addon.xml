@@ -4,7 +4,7 @@
     <import addon="xbmc.python" version="2.1.0"/>
 	<import addon="xbmc.json" version="6.0.0" />
   </requires>
-  <!-- addon.py, below, is my entry point -->
+  <!-- addon.py, below, is the entry point -->
   <extension point="xbmc.python.pluginsource" library="addon.py">
     <provides>video</provides>
   </extension>

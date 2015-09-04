@@ -12,3 +12,4 @@ DONE
 	- For example test with bad username or password
 - Figure out a way to reload the main page once settings have been set for the first time
 - Add real thumbnails to files and (maybe) to folders
+

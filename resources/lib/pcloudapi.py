@@ -1,7 +1,7 @@
 import urllib2
 import json
 import hashlib
-from numbers import Number # to check whether a certain variable is numeric
+from numbers import Number 	# to check whether a certain variable is numeric
 
 class PCloudApi:
 	PCLOUD_BASE_URL = 'https://api.pcloud.com/'
