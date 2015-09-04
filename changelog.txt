@@ -1,3 +1,7 @@
-v0.1.0
+v0.1.0 -- 04-Sep-2015
+---------------------
 - Initial version
-
+- Get real URL from PCloud's streaming API
+- Add settings dialog for username & password
+- Persist auth
+- Add real thumbnails to files
