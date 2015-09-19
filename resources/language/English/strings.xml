@@ -12,4 +12,6 @@
   <string id="30109">ERROR: cannot logon to PCloud</string>
   <string id="30110">Success</string>
   <string id="30111">Logon successful</string>
+  <string id="30112">Last used folder ID</string>
+  <string id="30113">Back to parent folder</string>
 </strings>

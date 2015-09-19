@@ -12,4 +12,6 @@
   <string id="30109">ERRORE: accesso a PCloud fallito</string>
   <string id="30110">Successo</string>
   <string id="30111">Accesso eseguito con successo</string>
+  <string id="30112">ID dell'ultimo folder usato</string>
+  <string id="30113">Torna al folder di livello superiore</string>
 </strings>

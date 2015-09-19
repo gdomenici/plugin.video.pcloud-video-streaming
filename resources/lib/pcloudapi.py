@@ -81,17 +81,24 @@ class PCloudApi:
 
 	def ListFolderContents(self, folderNameOrID):
 		self.CheckIfAuthPresent()
-		url = self.PCLOUD_BASE_URL + "listfolder?auth=" + self.auth
-		if isinstance (folderNameOrID, Number):
-			url += "&folderid=" + `folderNameOrID` # string coercion
-		else:
-			url += "&path=" + folderNameOrID
-		outputStream = urllib2.urlopen(url)
-		response = json.load(outputStream)
-		outputStream.close()
-		if response["result"] != 0:
-			errorMessage = self.GetErrorMessage(response["result"])
-			raise Exception("Error calling listfolder: " + errorMessage)
+		tryAgain = True
+		while tryAgain:
+			url = self.PCLOUD_BASE_URL + "listfolder?auth=" + self.auth
+			if isinstance (folderNameOrID, Number):
+				url += "&folderid=" + `folderNameOrID` # string coercion
+			else:
+				url += "&path=" + folderNameOrID
+			outputStream = urllib2.urlopen(url)
+			response = json.load(outputStream)
+			outputStream.close()
+			if response["result"] == 2005: # directory does not exist
+				folderNameOrID = 0
+				tryAgain = True # try again on the root directory
+			else:
+				tryAgain = False
+				if response["result"] != 0:
+					errorMessage = self.GetErrorMessage(response["result"])
+					raise Exception("Error calling listfolder: " + errorMessage)
 		return response
 
 	def GetStreamingUrl(self, fileID):

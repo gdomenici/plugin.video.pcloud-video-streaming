@@ -1,5 +1,4 @@
 *.pyo
 *.pyc
 zz*
-python2.7.exe.stackdump  
-
+**/*.stackdump

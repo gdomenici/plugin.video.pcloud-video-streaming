@@ -91,7 +91,8 @@ if mode[0] == "folder":
 			exit()
 	folderID = args.get("folderID", None)
 	if folderID is None:
-		folderID = 0
+		# if starting up, retrieve last used folder ID from settings (default is 0, which is the root folder)
+		folderID = int(myAddon.getSetting("lastUsedFolderID"))
 	else:
 		folderID = int(folderID[0])
 	
@@ -126,10 +127,20 @@ if mode[0] == "folder":
 				"audio",
 				{ 	"codec", oneItem["audiocodec"] }
 			)
+			# The below is necessary in order for xbmcplugin.setResolvedUrl() to work properly
+			li.setProperty('IsPlayable', 'true')
 			fileUrl = base_url + "?mode=file&fileID=" + `oneItem["fileid"]`
 			xbmcplugin.addDirectoryItem(handle=addon_handle, url=fileUrl, listitem=li)
-			
+	# now add "go up one level" fake directory, unless we're in the root folder
+	if folderContents["metadata"].has_key("parentfolderid"):
+		parentFolderID = folderContents["metadata"]["parentfolderid"]
+		url = base_url + "?mode=folder&folderID=" + `parentFolderID`
+		# "Back to parent folder"
+		parentFolderText = myAddon.getLocalizedString(30113)
+		li = xbmcgui.ListItem(parentFolderText, iconImage="DefaultFolder.png")
+		xbmcplugin.addDirectoryItem(handle=addon_handle, url=url, listitem=li, isFolder=True)
 	xbmcplugin.endOfDirectory(addon_handle)
+	myAddon.setSetting("lastUsedFolderID", `folderID`)
 	
 elif mode[0] == "file":
 	if IsAuthMissing():
@@ -139,5 +150,8 @@ elif mode[0] == "file":
 	fileID = int(args["fileID"][0])
 	# Get streaming URL from pcloud
 	streamingUrl = pcloud.GetStreamingUrl(fileID)
-	player = xbmc.Player()
-	player.play(streamingUrl)
+	# The code below constructs a new artificial ListItem with only the URL. Then
+	# we pass the ListItem in question to setResolvedUrl, which will tell Kodi we
+	# want to play that URL as a response to this call.
+	item = xbmcgui.ListItem(path=streamingUrl)
+	xbmcplugin.setResolvedUrl(addon_handle, True, item)
