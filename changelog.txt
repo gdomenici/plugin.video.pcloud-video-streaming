@@ -1,3 +1,8 @@
+v1.0.2 --
+- Removed unnecessary json dependency from addon.xml
+- Added context menu for deletion of files from PCloud
+- Now listing more video content types than just video/mp4
+
 v1.0.1 -- 19-Sep-2015
 ---------------------
 - Now correctly setting watched/unwatched/progress markers
