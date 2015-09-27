@@ -137,7 +137,16 @@ class PCloudApi:
 			errorMessage = self.GetErrorMessage(response["result"])
 			raise Exception("Error calling deletefile: " + errorMessage)
 		
-		
+	def DeleteFolder(self, folderID):
+		self.CheckIfAuthPresent()
+		url = self.PCLOUD_BASE_URL + "deletefolderrecursive?auth=" + self.auth + "&folderid=" + `folderID`
+		outputStream = urllib2.urlopen(url)
+		response = json.load(outputStream)
+		outputStream.close()
+		if response["result"] != 0:
+			errorMessage = self.GetErrorMessage(response["result"])
+			raise Exception("Error calling deletefolderrecursive: " + errorMessage)
+
 #auth = PerformLogon("username@example.com", "password")
 #ListFolderContents("/Vcast")
 #ListFolderContents(34719254)

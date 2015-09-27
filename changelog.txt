@@ -1,6 +1,8 @@
 v1.0.2 --
 - Removed unnecessary json dependency from addon.xml
 - Added context menu for deletion of files from PCloud
+- Added context menu for deletion of folders from PCloud
+- Added context menu for "mark as watched"
 - Now listing more video content types than just video/mp4
 
 v1.0.1 -- 19-Sep-2015
