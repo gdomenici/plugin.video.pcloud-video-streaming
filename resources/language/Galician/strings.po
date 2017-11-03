@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "POT-Creation-Date: 2017-11-03 21:11+0100\n"
-"PO-Revision-Date: 2017-11-03 21:13+0100\n"
+"PO-Revision-Date: 2017-11-03 21:27+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -15,7 +15,7 @@ msgstr ""
 
 msgctxt "#30100"
 msgid "General"
-msgstr ""
+msgstr "Xeral"
 
 msgctxt "#30101"
 msgid "pCloud username (email)"
@@ -23,7 +23,7 @@ msgstr "usuario pCloud (correo)"
 
 msgctxt "#30102"
 msgid "pCloud password"
-msgstr "contraseña pCloud"
+msgstr "contrasinal pCloud"
 
 msgctxt "#30103"
 msgid "Log On"
@@ -43,15 +43,15 @@ msgstr ""
 
 msgctxt "#30107"
 msgid "Error"
-msgstr ""
+msgstr "Erro"
 
 msgctxt "#30108"
 msgid "Cannot log on to pCloud (see log)"
-msgstr "No es posible conectar con pCloud (vea el log)"
+msgstr "Non é posible conectar con pCloud (vexa o log)"
 
 msgctxt "#30109"
 msgid "ERROR: cannot logon to pCloud"
-msgstr "ERROR: No se puede iniciar sesión en pCloud"
+msgstr "ERRO: Non se pode iniciar sesión en pCloud"
 
 msgctxt "#30110"
 msgid "Success"
@@ -63,11 +63,11 @@ msgstr "Acceso realizado"
 
 msgctxt "#30112"
 msgid "Last used folder ID"
-msgstr "ID de la última carpeta accedida"
+msgstr "ID da derradeira carpeta accedida"
 
 msgctxt "#30113"
 msgid "Back to parent folder"
-msgstr "Regresar a la carpeta anterior"
+msgstr "Voltar á carpeta anterior"
 
 msgctxt "#30114"
 msgid "Delete from pCloud..."
@@ -75,7 +75,7 @@ msgstr "Borrar de pCloud…"
 
 msgctxt "#30115"
 msgid "Confirm Delete"
-msgstr "Confirme el borrado"
+msgstr "Confirme o borrado"
 
 msgctxt "#30116"
 msgid "Delete '{0}' from pCloud?"
@@ -83,7 +83,7 @@ msgstr "¿Borrar ‘{0}’ de pCloud?"
 
 msgctxt "#30117"
 msgid "Operation cannot be undone."
-msgstr "La operación es irreversible."
+msgstr "A operación éche irreversible."
 
 msgctxt "#30118"
 msgid "Deleted successfully"
@@ -91,11 +91,11 @@ msgstr "Borrado correctamente"
 
 msgctxt "#30119"
 msgid "Error during delete (see log)"
-msgstr "Error durante el borrado (ver log)"
+msgstr "Erro perante o borrado (ver log)"
 
 msgctxt "#30120"
 msgid "ERROR: cannot delete file or folder from pCloud"
-msgstr "ERROR: no es posible borrar el fichero o la carpeta en pCloud"
+msgstr "ERRO: non é posible borrar o ficheiro ou a carpeta en pCloud"
 
 msgctxt "#30121"
 msgid "Mark as watched"
@@ -103,8 +103,9 @@ msgstr "Marcar como visto"
 
 msgctxt "#30122"
 msgid "My Shares"
-msgstr "Mis comparticiones"
+msgstr "As miñas comparticións"
 
 msgctxt "#30123"
 msgid "Back to My pCloud"
-msgstr "Regresar a Mi pCloud"
+msgstr "Voltar a Mi pCloud"
+
