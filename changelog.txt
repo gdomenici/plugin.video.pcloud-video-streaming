@@ -1,3 +1,7 @@
+v1.2.7 -- 07-Nov-2017
+- Fixed issue #7 (thanks @Danieldiazi) related to sorting the files alphabetically.
+- Added Spanish and Galician (thanks @Danieldiazi) and Hebrew (thanks @Eng2Heb) translations.
+
 v1.2.6 -- 02-Mar-2017
 - Fixed issue #4, occurring with files whose internal pCloud ID ('fileID') was larger than a given threshold.
 - Updated Python dependency to 2.19.0 to match Helix.
