@@ -1,3 +1,6 @@
+v1.2.8 -- 04-Jan-2018
+- Can now show pictures in addition to the other content types.
+
 v1.2.7 -- 07-Nov-2017
 - Fixed issue #7 (thanks @Danieldiazi) related to sorting the files alphabetically.
 - Added Spanish and Galician (thanks @Danieldiazi) and Hebrew (thanks @Eng2Heb) translations.

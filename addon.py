@@ -149,7 +149,8 @@ if mode[0] in ("folder", "myshares"):
 			xbmc.log (contentType)
 			if not contentType.startswith("video/"
 				) and not contentType.startswith("audio/"
-				) and not contentType.startswith("application/x-iso9660-image"):
+				) and not contentType.startswith("application/x-iso9660-image"
+				) and not contentType.startswith("image/"):
 				continue
 			thumbnailUrl = thumbs.get(oneFileOrFolderItem["fileid"], None)
 			if thumbnailUrl is None:
@@ -184,6 +185,8 @@ if mode[0] in ("folder", "myshares"):
 				)
 			# Finally add the list item to the directory
 			fileUrl = base_url + "?mode=file&fileID=" + str(oneFileOrFolderItem["fileid"])
+			if contentType[:6] == "image/":
+				fileUrl += "&isPicture=1" # We will need this info later on
 			xbmcplugin.addDirectoryItem(handle=addon_handle, url=fileUrl, listitem=li)
 	
 	# Now add the "virtual" entries ("go to parent folder", "my shares", and "go to root folder") where necessary
@@ -224,11 +227,15 @@ elif mode[0] == "file":
 	fileID = int(args["fileID"][0])
 	# Get streaming URL from pcloud
 	streamingUrl = pcloud.GetStreamingUrl(fileID)
-	# The code below constructs a new artificial ListItem with only the URL. Then
-	# we pass the ListItem in question to setResolvedUrl, which will tell Kodi we
-	# want to play that URL as a response to this call.
-	item = xbmcgui.ListItem(path=streamingUrl)
-	xbmcplugin.setResolvedUrl(addon_handle, True, item)
+	if "isPicture" in args:
+		xbmc.executebuiltin('ShowPicture({0})'.format(streamingUrl))
+	else:
+		# The code below constructs a new artificial ListItem with only the URL. Then
+		# we pass the ListItem in question to setResolvedUrl, which will tell Kodi we
+		# want to play that URL as a response to this call.
+		item = xbmcgui.ListItem(path=streamingUrl)
+		xbmcplugin.setResolvedUrl(addon_handle, True, item)
+	
 
 elif mode[0] == "delete":
 	# This branch can be called as a result of a context menu item callback
