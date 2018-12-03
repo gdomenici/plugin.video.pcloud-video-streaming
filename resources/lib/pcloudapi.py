@@ -8,6 +8,10 @@ from numbers import Number 	# to check whether a certain variable is numeric
 from loginfailedexception import LoginFailedException
 import os
 import operator # it's for use sort with operator
+import ssl
+if (not os.environ.get('PYTHONHTTPSVERIFY', '') and
+    getattr(ssl, '_create_unverified_context', None)): 
+    ssl._create_default_https_context = ssl._create_unverified_context
 
 class PCloudApi:
 	PCLOUD_BASE_URL = 'https://api.pcloud.com/'
@@ -67,7 +71,7 @@ class PCloudApi:
 			errorMessage = self.GetErrorMessage(response["result"])
 			raise Exception("Error calling getdigest: " + errorMessage)
 
-		authUrl = self.PCLOUD_BASE_URL + "userinfo?getauth=1&logout=1&username=" + username + "&digest=" + response["digest"] + \
+		authUrl = self.PCLOUD_BASE_URL + "userinfo?getauth=1&logout=1&username=" + urllib.quote_plus(username) + "&digest=" + response["digest"] + \
 					"&authexpire=" + str(self.TOKEN_EXPIRATION_SECONDS) # this backtick affair is a to-string conversion
 		sha1 = hashlib.sha1()
 		sha1.update(username)
