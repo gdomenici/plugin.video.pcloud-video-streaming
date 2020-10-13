@@ -36,54 +36,43 @@ class MyXbmcMonitor( xbmc.Monitor ):
         xbmcgui.Dialog().notification("Info", "Settings changed", time=10000)
 '''
 def IsAuthMissing():
-	auth = myAddon.getSetting("auth")
+
+	username  = ''
+	password = ''
+
+	if myAddon.getSetting("CloudUrl") == 'https://api.pcloud.com/':
+
+		username = myAddon.getSetting("username1")
+		password = myAddon.getSetting("password1")
+
+		
+	elif myAddon.getSetting("CloudUrl") == 'https://eapi.pcloud.com/':
+
+		username = myAddon.getSetting("username2")
+		password = myAddon.getSetting("password2")
+
 	authExpiryStr = myAddon.getSetting("authExpiry")
 	if authExpiryStr is None or authExpiryStr == "":
-		return True
-	authExpiryTimestamp = float(authExpiryStr)
-	authExpiry = datetime.fromtimestamp(authExpiryTimestamp)
-	if datetime.now() > authExpiry or auth == "":
-		return True
-	# If we're here it means there is valid auth saved in the config file
-	pcloud.SetAuth(auth)
-	return False
+	
+		authExpiry = datetime.now() + timedelta(seconds = pcloud.TOKEN_EXPIRATION_SECONDS)
+		authExpiryTimestamp = time.mktime(authExpiry.timetuple())
+		myAddon.setSetting("authExpiry", str(authExpiryTimestamp))
 
-def AuthenticateToPCloud():
-	yesNoDialog = xbmcgui.Dialog()
-	wantToAuthenticate = yesNoDialog.yesno(
-							myAddon.getLocalizedString(30103), # Log On
-							myAddon.getLocalizedString(30104)) # Log on to PCloud?
-	if not wantToAuthenticate:
-		return False
-	usernameDialog = xbmcgui.Dialog()
-	username = usernameDialog.input(myAddon.getLocalizedString(30101)) # PCloud username (email)
-	if username == "":
-		return False
-	passwordDialog = xbmcgui.Dialog()
-	password = passwordDialog.input(
-									myAddon.getLocalizedString(30102), # PCloud password
-									option=xbmcgui.ALPHANUM_HIDE_INPUT)
-	if password == "":
-		return False
+
+	authExpiryTimestamp = float(myAddon.getSetting("authExpiry"))
+	authExpiry = datetime.fromtimestamp(authExpiryTimestamp)
+	if datetime.now() > authExpiry:
+		return True
+
 	try:
 		auth = pcloud.PerformLogon(username, password)
+		pcloud.SetAuth(auth)
 	except Exception as ex:
-		xbmcgui.Dialog().notification(
-			myAddon.getLocalizedString(30107), # Error
-			myAddon.getLocalizedString(30108), # Cannot log on to PCloud (see log)
-			icon=xbmcgui.NOTIFICATION_ERROR,
-			time=5000)
-		xbmc.log(myAddon.getLocalizedString(30109) + ": " + str(ex), xbmc.LOGERROR) # ERROR: cannot logon to PCloud
-		return False
-	myAddon.setSetting("auth", auth)
-	authExpiry = datetime.now() + timedelta(seconds = pcloud.TOKEN_EXPIRATION_SECONDS)
-	authExpiryTimestamp = time.mktime(authExpiry.timetuple())
-	myAddon.setSetting("authExpiry", str(authExpiryTimestamp))
-	xbmcgui.Dialog().notification(
-			myAddon.getLocalizedString(30110), # Success
-			myAddon.getLocalizedString(30111), # Logon successful
-			time=5000)
-	return True
+		xbmcgui.Dialog().notification(myAddon.getLocalizedString(30107),myAddon.getLocalizedString(30108),icon=xbmcgui.NOTIFICATION_ERROR,time=5000)
+		return True
+
+	return False
+
 
 folderID = None
 
@@ -94,9 +83,7 @@ if mode is None:
 
 if mode[0] in ("folder", "myshares"):
 	if IsAuthMissing():
-		authResult = AuthenticateToPCloud()
-		if authResult == False:
-			exit()
+		exit()
 	if mode[0] == "folder":
 		isMyShares = False
 		folderID = args.get("folderID", None) # first try and get it from the command line
@@ -116,11 +103,8 @@ if mode[0] in ("folder", "myshares"):
 	try:
 		folderContents = pcloud.ListFolderContents(folderID, isMyShares)
 	except LoginFailedException as lfEx:
-		authResult = AuthenticateToPCloud()
-		if authResult == False:
-			exit()
-		# try again
-		folderContents = pcloud.ListFolderContents(folderID, isMyShares)
+		exit()
+
 
 	# Collect all file IDs in order to get thumbnails...
 	if not isMyShares:
@@ -256,9 +240,7 @@ if mode[0] in ("folder", "myshares"):
 
 elif mode[0] == "file":
 	if IsAuthMissing():
-		authResult = AuthenticateToPCloud()
-		if authResult == False:
-			exit()
+		exit()
 	fileID = int(args["fileID"][0])
 	# Get streaming URL from pcloud
 	streamingUrl = pcloud.GetStreamingUrl(fileID)
@@ -280,9 +262,7 @@ elif mode[0] == "file":
 elif mode[0] == "delete":
 	# This branch can be called as a result of a context menu item callback
 	if IsAuthMissing():
-		authResult = AuthenticateToPCloud()
-		if authResult == False:
-			exit()
+		exit()
 	idToDelete = args.get("fileID", None)
 	if idToDelete is None:
 		idToDelete = int(args["folderID"][0])

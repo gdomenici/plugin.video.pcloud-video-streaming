@@ -25,7 +25,7 @@ class PCloudApi:
 	def __init__(self):
 		# auth typically comes from xbmcaddon.Addon() followed by myAddon.getSetting("auth")
 		self.auth = None
-		self.PCLOUD_BASE_URL = 'https://api.pcloud.com/'
+		self.PCLOUD_BASE_URL = xbmcaddon.Addon().getSetting("CloudUrl")
 		self.TOKEN_EXPIRATION_SECONDS = 100 * 86400 # 100 days
 		self.HttpHandler = build_opener()
 		self.HttpHandler.addheaders = [('Accept', 'application/json')]

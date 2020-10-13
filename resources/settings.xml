@@ -2,10 +2,16 @@
 <settings>
     <category label="30100">
 		<!-- Will contain the pcloud auth string, but is only set programmatically -->
-        <setting label="30105" type="text" id="auth" visible="false" default=""/>
-		<setting label="30106" type="text" id="authExpiry" visible="false" default=""/>
-		<!-- Last used folder ID -->
-		<setting label="30112" type="text" id="lastUsedFolderID" visible="false" default="0"/>
+		<setting label="CLOUD URL" type="labelenum" id="CloudUrl" values="https://api.pcloud.com/|https://eapi.pcloud.com/" default="https://api.pcloud.com/"/>
+		<setting type="sep"/>
+		<setting label="API USERNAME" type="text" id="username1" default=""/>
+        <setting label="API PASSWORD" type="text" id="password1" default=""/>
+		<setting type="sep"/>
+		<setting label="EAPI USERNAME" type="text" id="username2" default=""/>
+        <setting label="EAPI PASSWORD" type="text" id="password2" default=""/>
+
+		<setting label="EAPI EXPIRY" type="text" id="authExpiry" visible="false" default=""/>
+		<setting label="LAST USER FOLDER ID" type="text" id="lastUsedFolderID" visible="false" default="0"/>
 	</category>
     <!-- category label="30106">
         <setting label="30107" type="action" action="RunScript(plugin.video.pcloud-video-streaming, downloadreport)"/>
