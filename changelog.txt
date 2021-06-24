@@ -1,6 +1,11 @@
+v1.5.0 -- 24-Jun-2021
+- Changes required for compatibility with Kodi Matrix
+- Updated xbmc.python to version="3.0.0"
+- xbmcgui.ListItem no longer has attribute "setIconImage" so converted to "setArt"
+- Changes courtesy of Carneal
+
 v1.4.2 -- 07-Jun-2020
-- Fixed issue #27: In certain locales (such as en-nz), the "Back to parent folder" list item would sort
-  after folders starting with a number. Now it sorts correctly at the top of the list.
+- Fixed issue #27: In certain locales (such as en-nz), the "Back to parent folder" list item would sort after folders starting with a number. Now it sorts correctly at the top of the list.
 
 v1.4.1 -- 27-Mar-2020
 - Now also made available as a Music add-on.
@@ -15,21 +20,16 @@ v1.3.1 -- 24-Nov-2019
 - Removed superfluous files.
 
 v1.3.0 -- 21-Nov-2019
-- Fixed issue #21: now the add-on runs with Python 3, used in Kodi 19 and higher, as well as Python 2,
-  used in all previous Kodi versions.
+- Fixed issue #21: now the add-on runs with Python 3, used in Kodi 19 and higher, as well as Python 2, used in all previous Kodi versions.
 
 v1.2.11 -- 03-Dec-2018
-- Fixed issue #18: if the PCloud username (i.e. the email address) contained nonstandard symbols such as
-  for example a "+", logon would fail.
+- Fixed issue #18: if the PCloud username (i.e. the email address) contained nonstandard symbols such as for example a "+", logon would fail.
 
 v1.2.10 -- 01-Dec-2018
-- Fixed issue #17: if a folder contained a large amount of files (typically, 500+), its contents could not
-  be shown.
+- Fixed issue #17: if a folder contained a large amount of files (typically, 500+), its contents could not be shown.
 
 v1.2.9 -- 29-Apr-2018
-- Fixed issue #13: if a subtitle file is present in the same folder with the same filename (but different
-  extension, such as for example .srt) as an existing video file, then those subtitles will be shown along
-  with the video.
+- Fixed issue #13: if a subtitle file is present in the same folder with the same filename (but different extension, such as for example .srt) as an existing video file, then those subtitles will be shown along with the video.
 
 v1.2.8 -- 04-Jan-2018
 - Can now show pictures in addition to the other content types.
