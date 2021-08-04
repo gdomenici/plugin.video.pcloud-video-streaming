@@ -10,7 +10,7 @@
 		<setting label="EAPI USERNAME" type="text" id="username2" default=""/>
         <setting label="EAPI PASSWORD" type="text" id="password2" default=""/>
 
-		<setting label="EAPI EXPIRY" type="text" id="authExpiry" visible="false" default=""/>
+		<setting label="EAPI EXPIRY" type="text" id="authExpiry" visible="true" default=""/>
 		<setting label="LAST USER FOLDER ID" type="text" id="lastUsedFolderID" visible="false" default="0"/>
 	</category>
     <!-- category label="30106">
