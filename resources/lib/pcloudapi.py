@@ -65,7 +65,7 @@ class PCloudApi:
 		elif errorCode == 5000:
 			errorText = "Internal error. Try again later."
 		else:
-			errorText = "Unknown error"
+			errorText = "Unknown error: {}".format(errorCode)
 		return errorText
 
 	def SetAuth(self, auth):

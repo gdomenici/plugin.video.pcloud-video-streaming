@@ -1,3 +1,6 @@
+v1.4.4 -- 10-Oct-2021
+- This is a version with just extra debug info. If you are not having problems, you may skip this version.
+
 v1.4.3 -- 03-Oct-2021
 - Addressed issue #42: added setting to allow choice of endpoint API between eapi.pcloud.com and eapi.pcloud.com.
   This is a backport of the corresponding change done on 1.5.1, but for Helix+ users.
